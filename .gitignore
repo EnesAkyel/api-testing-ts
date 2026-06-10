@@ -1,0 +1,8 @@
+node_modules/
+dist/
+reports/
+.env
+*.bak
+.idea/
+*.iml
+improvements.txt

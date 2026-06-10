@@ -1,0 +1,46 @@
+{
+  "name": "api-testing-ts",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:smoke": "jest --config jest.smoke.config.js",
+    "test:contract": "jest --config jest.contract.config.js",
+    "test:integration": "jest --config jest.integration.config.js",
+    "test:regression": "jest --config jest.regression.config.js --verbose",
+    "test:regression:local": "dotenv -e regression-tests/.env.regression -- jest --config jest.regression.config.js --verbose",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "format": "prettier --write src",
+    "format:check": "prettier --check src"
+  },
+  "keywords": [],
+  "author": "Enes Akyel",
+  "license": "ISC",
+  "description": "TypeScript API testing framework with typed HTTP client, AJV contract validation, Jest suite separation, and GitHub Actions CI/CD",
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@types/dotenv": "^6.1.1",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.9.2",
+    "ajv": "^8.20.0",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "jest": "^30.4.2",
+    "jest-html-reporters": "^3.1.7",
+    "jest-junit": "^16.0.0",
+    "prettier": "^3.8.3",
+    "ts-jest": "^29.4.11",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.61.0"
+  },
+  "dependencies": {
+    "axios": "^1.17.0",
+    "dotenv": "^17.4.2",
+    "fast-uri": "^3.1.2",
+    "json-schema-traverse": "^1.0.0",
+    "require-from-string": "^2.0.2"
+  }
+}
