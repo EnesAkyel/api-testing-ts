@@ -13,6 +13,8 @@
     "ignoreDeprecations": "6.0",
     "types": ["jest", "node"]
   },
-  "include": ["src/**/*", "regression-tests/**/*"],
+  "include": ["src/**/*",
+    "src/tests/regression-tests/**/*"
+  ],
   "exclude": ["node_modules", "dist"]
 }
