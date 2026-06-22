@@ -2,9 +2,9 @@ name: API Tests
 
 on:
   push:
-    branches: [main, master]
+    branches: [main]
   pull_request:
-    branches: [main, master]
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: read
@@ -12,7 +12,7 @@ permissions:
 
 env:
   NODE_VERSION: '20'
-  BASE_URL: https://jsonplaceholder.typicode.com
+  BASE_URL: http://localhost:8080/api/v1
 
 jobs:
   typecheck:
@@ -27,69 +27,121 @@ jobs:
       - run: npm ci
       - run: npx tsc --noEmit
 
-  smoke:
-    name: Smoke Tests
+  test:
+    name: Smoke / Contract / Integration
     runs-on: ubuntu-latest
     needs: typecheck
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout api-testing-ts
+        uses: actions/checkout@v4
+
+      - name: Checkout movie-catalog-api
+        uses: actions/checkout@v4
+        with:
+          repository: EnesAkyel/movie-catalog-api
+          path: movie-catalog-api
+
+      - name: Start movie-catalog-api
+        run: docker compose up -d --build
+        working-directory: movie-catalog-api
+
+      - name: Wait for API to be ready
+        working-directory: movie-catalog-api
+        run: |
+          echo "Waiting for API..."
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8080/api/v1/movies > /dev/null; then
+              echo "API is ready after $((i * 5))s"
+              exit 0
+            fi
+            echo "Attempt $i/30 — retrying in 5s..."
+            sleep 5
+          done
+          echo "API did not become ready in time"
+          docker compose logs --tail=100
+          exit 1
+
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
+
       - run: npm ci
-      - name: Run smoke tests
+
+      - name: Smoke tests
         run: npm run test:smoke
-      - name: Upload smoke report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: smoke-report
-          path: reports/
 
-  contract:
-    name: Contract Tests
-    runs-on: ubuntu-latest
-    needs: smoke
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-      - run: npm ci
-      - name: Run contract tests
+      - name: Contract tests
         run: npm run test:contract
-      - name: Upload contract report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: contract-report
-          path: reports/
 
-  integration:
-    name: Integration Tests
-    runs-on: ubuntu-latest
-    needs: smoke
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-      - run: npm ci
-      - name: Run integration tests
+      - name: Integration tests
         run: npm run test:integration
-      - name: Upload integration report
+
+      - name: Upload test reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: integration-report
+          name: test-reports
           path: reports/
+          retention-days: 14
+
       - name: Publish test results
         if: always()
         uses: dorny/test-reporter@v1
         with:
-          name: Integration Test Results
-          path: reports/integration-junit.xml
+          name: Test Results
+          path: reports/*-junit.xml
           reporter: jest-junit
+
+  regression:
+    name: Regression Tests
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout api-testing-ts
+        uses: actions/checkout@v4
+
+      - name: Checkout movie-catalog-api
+        uses: actions/checkout@v4
+        with:
+          repository: EnesAkyel/movie-catalog-api
+          path: movie-catalog-api
+
+      - name: Start movie-catalog-api
+        run: docker compose up -d --build
+        working-directory: movie-catalog-api
+
+      - name: Wait for API to be ready
+        working-directory: movie-catalog-api
+        run: |
+          echo "Waiting for API..."
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8080/api/v1/movies > /dev/null; then
+              echo "API is ready after $((i * 5))s"
+              exit 0
+            fi
+            echo "Attempt $i/30 — retrying in 5s..."
+            sleep 5
+          done
+          echo "API did not become ready in time"
+          docker compose logs --tail=100
+          exit 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - run: npm ci
+
+      - name: Run regression tests
+        run: npm run test:regression
+
+      - name: Upload regression report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-report
+          path: reports/
+          retention-days: 14

@@ -9,7 +9,7 @@
     "test:contract": "jest --config jest.contract.config.js",
     "test:integration": "jest --config jest.integration.config.js",
     "test:regression": "jest --config jest.regression.config.js --verbose",
-    "test:regression:local": "dotenv -e regression-tests/.env.regression -- jest --config jest.regression.config.js --verbose",
+    "test:regression:local": "dotenv -e src/tests/regression-tests/.env.regression -- jest --config jest.regression.config.js --verbose",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "format": "prettier --write src",

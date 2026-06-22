@@ -1,3 +1,2 @@
-export { postSchema, postListSchema } from './postSchema';
-export { userSchema, userListSchema } from './userSchema';
-export { commentSchema } from './commentSchema';
+export { movieSchema, movieListSchema } from './movieSchema';
+export { studioSchema, studioListSchema } from './studioSchema';

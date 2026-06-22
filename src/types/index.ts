@@ -1,3 +1,3 @@
-export * from './post';
-export * from './user';
-export * from './comment';
+export * from './movie';
+export * from './studio';
+export * from './pageResponse';
