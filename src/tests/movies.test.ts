@@ -55,6 +55,12 @@ describe('Movies API', () => {
       data.content.forEach((m) => expect(m.price).toBeLessThanOrEqual(5.0));
     });
 
+    it('filters by minPrice', async () => {
+      const { data } = await moviesApi.getMovies({ minPrice: 100.0, size: 100 });
+      expect(data.content.length).toBeGreaterThan(0);
+      data.content.forEach((m) => expect(m.price).toBeGreaterThanOrEqual(100.0));
+    });
+
     it('paginates — page 0 and page 1 return different movies', async () => {
       const [page0, page1] = await Promise.all([
         moviesApi.getMovies({ page: 0, size: 5 }),
@@ -92,6 +98,53 @@ describe('Movies API', () => {
     it('returns 409 when MID already exists', async () => {
       await expect(moviesApi.createMovie(TEST_MOVIE)).rejects.toMatchObject({
         response: { status: 409 },
+      });
+    });
+
+    it('returns 201 when studioID is in valid range but not in DB — no FK constraint', async () => {
+      const orphan = { ...TEST_MOVIE, mid: 5010, studio: 77 };
+      await moviesApi.deleteMovie(orphan.mid).catch(() => null);
+      const response = await moviesApi.createMovie(orphan);
+      expect(response.status).toBe(201);
+      expect(response.data.studio).toBe(77);
+      await moviesApi.deleteMovie(orphan.mid).catch(() => null);
+    });
+
+    describe('validation errors', () => {
+      it('returns 400 with field error when MID is below 1000', async () => {
+        await expect(moviesApi.createMovie({ ...TEST_MOVIE, mid: 999 })).rejects.toMatchObject({
+          response: {
+            status: 400,
+            data: {
+              message: 'Spring Validation Error',
+              errors: expect.arrayContaining([expect.objectContaining({ field: 'mid' })]),
+            },
+          },
+        });
+      });
+
+      it('returns 400 with field error when genre is invalid', async () => {
+        await expect(moviesApi.createMovie({ ...TEST_MOVIE, mid: 5002, genre: 'Cartoon' })).rejects.toMatchObject({
+          response: {
+            status: 400,
+            data: {
+              message: 'Spring Validation Error',
+              errors: expect.arrayContaining([expect.objectContaining({ field: 'genre' })]),
+            },
+          },
+        });
+      });
+
+      it('returns 400 with field error when rating is invalid', async () => {
+        await expect(moviesApi.createMovie({ ...TEST_MOVIE, mid: 5003, rating: 'X' })).rejects.toMatchObject({
+          response: {
+            status: 400,
+            data: {
+              message: 'Spring Validation Error',
+              errors: expect.arrayContaining([expect.objectContaining({ field: 'rating' })]),
+            },
+          },
+        });
       });
     });
   });
