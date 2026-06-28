@@ -11,7 +11,7 @@ permissions:
   checks: write
 
 env:
-  NODE_VERSION: '20'
+  NODE_VERSION: '24'
   BASE_URL: http://localhost:8080/api/v1
 
 jobs:

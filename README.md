@@ -60,7 +60,7 @@ src/
 
 ## Prerequisites
 
-- Node.js 20+
+- Node.js 24+
 - npm 9+
 - Docker (to run [movie-catalog-api](https://github.com/EnesAkyel/movie-catalog-api) locally)
 
