@@ -19,8 +19,8 @@ jobs:
     name: Type Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
@@ -33,10 +33,10 @@ jobs:
     needs: typecheck
     steps:
       - name: Checkout api-testing-ts
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Checkout movie-catalog-api
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: EnesAkyel/movie-catalog-api
           path: movie-catalog-api
@@ -61,7 +61,7 @@ jobs:
           docker compose logs --tail=100
           exit 1
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
@@ -79,7 +79,7 @@ jobs:
 
       - name: Upload test reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-reports
           path: reports/
@@ -87,7 +87,7 @@ jobs:
 
       - name: Publish test results
         if: always()
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v3
         with:
           name: Test Results
           path: reports/*-junit.xml
@@ -100,10 +100,10 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout api-testing-ts
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Checkout movie-catalog-api
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: EnesAkyel/movie-catalog-api
           path: movie-catalog-api
@@ -128,7 +128,7 @@ jobs:
           docker compose logs --tail=100
           exit 1
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
@@ -140,7 +140,7 @@ jobs:
 
       - name: Upload regression report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: regression-report
           path: reports/
