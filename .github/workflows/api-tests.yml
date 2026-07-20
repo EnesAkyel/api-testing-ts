@@ -6,10 +6,6 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
-permissions:
-  contents: read
-  checks: write
-
 env:
   NODE_VERSION: '24'
   BASE_URL: http://localhost:8080/api/v1
@@ -18,19 +14,23 @@ jobs:
   typecheck:
     name: Type Check
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-      - run: npm ci
-      - run: npx tsc --noEmit
+      - run: npm ci --ignore-scripts
+      - run: npm exec --ignore-scripts -- tsc --noEmit
 
   test:
     name: Smoke / Contract / Integration
     runs-on: ubuntu-latest
-    needs: typecheck
+    permissions:
+      contents: read
+      checks: write
     steps:
       - name: Checkout api-testing-ts
         uses: actions/checkout@v7
@@ -66,7 +66,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
 
-      - run: npm ci
+      - run: npm ci --ignore-scripts
 
       - name: Smoke tests
         run: npm run test:smoke
@@ -98,6 +98,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
     steps:
       - name: Checkout api-testing-ts
         uses: actions/checkout@v7
@@ -133,7 +135,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
 
-      - run: npm ci
+      - run: npm ci --ignore-scripts
 
       - name: Run regression tests
         run: npm run test:regression

@@ -9,12 +9,12 @@ describe('@contract Movies API', () => {
   describe('GET /movies', () => {
     it('content array matches Movie[] schema', async () => {
       const { data } = await moviesApi.getMovies({ size: 100 });
-      validateSchema(movieListSchema, data.content);
+      expect(() => validateSchema(movieListSchema, data.content)).not.toThrow();
     });
 
     it('every item individually matches the Movie schema', async () => {
       const { data } = await moviesApi.getMovies({ size: 100 });
-      data.content.forEach((m) => validateSchema(movieSchema, m));
+      expect(() => data.content.forEach((m) => validateSchema(movieSchema, m))).not.toThrow();
     });
 
     it('response includes required pagination fields', async () => {
@@ -29,7 +29,7 @@ describe('@contract Movies API', () => {
   describe('GET /movie/:mid', () => {
     it('response body matches Movie schema', async () => {
       const { data } = await moviesApi.getMovie(1001);
-      validateSchema(movieSchema, data);
+      expect(() => validateSchema(movieSchema, data)).not.toThrow();
     });
 
     it('contains all required fields with correct types', async () => {
@@ -53,7 +53,7 @@ describe('@contract Movies API', () => {
 
     it('created resource matches Movie schema', async () => {
       const { data } = await moviesApi.createMovie(payload);
-      validateSchema(movieSchema, data);
+      expect(() => validateSchema(movieSchema, data)).not.toThrow();
     });
   });
 });

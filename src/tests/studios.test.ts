@@ -28,7 +28,7 @@ describe('Studios API', () => {
 
     it('content matches Studio[] schema', async () => {
       const { data } = await studiosApi.getStudios(0, 100);
-      validateSchema(studioListSchema, data.content);
+      expect(() => validateSchema(studioListSchema, data.content)).not.toThrow();
     });
 
     it('returns 5 seeded studios', async () => {
