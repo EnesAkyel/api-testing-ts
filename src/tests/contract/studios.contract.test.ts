@@ -9,12 +9,12 @@ describe('@contract Studios API', () => {
   describe('GET /studios', () => {
     it('content array matches Studio[] schema', async () => {
       const { data } = await studiosApi.getStudios(0, 100);
-      validateSchema(studioListSchema, data.content);
+      expect(() => validateSchema(studioListSchema, data.content)).not.toThrow();
     });
 
     it('every item individually matches the Studio schema', async () => {
       const { data } = await studiosApi.getStudios(0, 100);
-      data.content.forEach((s) => validateSchema(studioSchema, s));
+      expect(() => data.content.forEach((s) => validateSchema(studioSchema, s))).not.toThrow();
     });
 
     it('response includes required pagination fields', async () => {

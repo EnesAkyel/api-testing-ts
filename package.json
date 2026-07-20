@@ -42,7 +42,7 @@
     "uuid": "^11.1.1"
   },
   "dependencies": {
-    "axios": "^1.17.0",
+    "axios": "^1.18.0",
     "dotenv": "^17.4.2",
     "fast-uri": "^3.1.2",
     "json-schema-traverse": "^1.0.0",

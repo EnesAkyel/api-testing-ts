@@ -35,7 +35,7 @@ describe('Movies API', () => {
 
     it('content matches Movie[] schema', async () => {
       const { data } = await moviesApi.getMovies({ size: 100 });
-      validateSchema(movieListSchema, data.content);
+      expect(() => validateSchema(movieListSchema, data.content)).not.toThrow();
     });
 
     it('filters by genre', async () => {

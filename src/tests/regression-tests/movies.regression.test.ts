@@ -22,7 +22,7 @@ describe('@regression Movies API', () => {
 
     it('all movies match the schema', async () => {
       const { data } = await moviesApi.getMovies({ size: 100 });
-      validateSchema(movieListSchema, data.content);
+      expect(() => validateSchema(movieListSchema, data.content)).not.toThrow();
     });
 
     it('all studio IDs reference a valid seeded studio', async () => {
