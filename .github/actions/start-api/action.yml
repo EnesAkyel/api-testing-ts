@@ -1,0 +1,46 @@
+name: Start movie-catalog-api
+description: Checkout movie-catalog-api, build Docker image from pre-built JAR, start the API, and wait until it is healthy.
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout movie-catalog-api
+      uses: actions/checkout@v7
+      with:
+        repository: EnesAkyel/movie-catalog-api
+        path: movie-catalog-api
+
+    - name: Download application JAR
+      uses: actions/download-artifact@v8
+      with:
+        name: app-jar
+        path: movie-catalog-api/target/
+
+    - name: Build Docker image from pre-built JAR
+      shell: bash
+      working-directory: movie-catalog-api
+      run: |
+        cp target/movie-catalog-api-*.jar app.jar
+        docker build -f Dockerfile.ci -t movie-catalog-api .
+        rm app.jar
+
+    - name: Start movie-catalog-api
+      shell: bash
+      working-directory: movie-catalog-api
+      run: docker compose up -d
+
+    - name: Wait for API to be ready
+      shell: bash
+      run: |
+        echo "Waiting for API..."
+        for i in $(seq 1 30); do
+          if curl -sf http://localhost:8080/api/v1/movies > /dev/null; then
+            echo "API is ready after $((i * 5))s"
+            exit 0
+          fi
+          echo "Attempt $i/30 — retrying in 5s..."
+          sleep 5
+        done
+        echo "API did not become ready in time"
+        docker compose -f movie-catalog-api/docker-compose.yml logs --tail=100
+        exit 1
