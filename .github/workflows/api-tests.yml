@@ -93,7 +93,7 @@ jobs:
 
       - name: Publish test results
         if: always()
-        uses: dorny/test-reporter
+        uses: dorny/test-reporter@v3
         with:
           name: Test Results
           path: reports/*-junit.xml
