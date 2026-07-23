@@ -8,15 +8,15 @@ TypeScript API test automation framework targeting [movie-catalog-api](https://g
 
 ## Tech Stack
 
-| Tool | Role |
-|------|------|
+| Tool                | Role                                                     |
+|---------------------|----------------------------------------------------------|
 | TypeScript (strict) | End-to-end type safety across client, types, and schemas |
-| Jest | Test runner with suite-level separation |
-| Axios | HTTP client, wrapped and abstracted in `ApiClient` |
-| AJV | Runtime JSON schema validation for contract tests |
-| jest-junit | JUnit XML reports — consumed by CI and test dashboards |
-| jest-html-reporters | Interactive HTML reports for local review |
-| ESLint + Prettier | Consistent code quality and formatting |
+| Jest                | Test runner with suite-level separation                  |
+| Axios               | HTTP client, wrapped and abstracted in `ApiClient`       |
+| AJV                 | Runtime JSON schema validation for contract tests        |
+| jest-junit          | JUnit XML reports — consumed by CI and test dashboards   |
+| jest-html-reporters | Interactive HTML reports for local review                |
+| ESLint + Prettier   | Consistent code quality and formatting                   |
 
 ---
 
@@ -89,13 +89,13 @@ The API starts at `http://localhost:8080/api/v1` with seeded movies and studios.
 
 ## Running Tests
 
-| Command | Suite | What it checks |
-|---------|-------|----------------|
-| `npm run test:smoke` | Smoke | Service is up, endpoints return 200 |
-| `npm run test:contract` | Contract | Response shapes match AJV schemas |
-| `npm run test:integration` | Integration | Full CRUD + error cases + performance |
-| `npm run test:regression:local` | Regression | Collection integrity + data consistency against seeded data |
-| `npm test` | All | Everything — generates combined HTML + JUnit reports |
+| Command                         | Suite       | What it checks                                              |
+|---------------------------------|-------------|-------------------------------------------------------------|
+| `npm run test:smoke`            | Smoke       | Service is up, endpoints return 200                         |
+| `npm run test:contract`         | Contract    | Response shapes match AJV schemas                           |
+| `npm run test:integration`      | Integration | Full CRUD + error cases + performance                       |
+| `npm run test:regression:local` | Regression  | Collection integrity + data consistency against seeded data |
+| `npm test`                      | All         | Everything — generates combined HTML + JUnit reports        |
 
 HTML and JUnit XML reports are written to `reports/` after each run.
 
@@ -105,11 +105,11 @@ HTML and JUnit XML reports are written to `reports/` after each run.
 
 Copy `.env.example` to `.env` and adjust as needed:
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `BASE_URL` | `http://localhost:8080/api/v1` | Base URL of the API under test |
-| `REQUEST_TIMEOUT_MS` | `30000` | Per-request Axios timeout (ms) |
-| `RESPONSE_TIME_THRESHOLD_MS` | `3000` | Ceiling for `toRespondWithin` assertions (ms) |
+| Variable                     | Default                        | Description                                   |
+|------------------------------|--------------------------------|-----------------------------------------------|
+| `BASE_URL`                   | `http://localhost:8080/api/v1` | Base URL of the API under test                |
+| `REQUEST_TIMEOUT_MS`         | `30000`                        | Per-request Axios timeout (ms)                |
+| `RESPONSE_TIME_THRESHOLD_MS` | `3000`                         | Ceiling for `toRespondWithin` assertions (ms) |
 
 For regression tests, copy `src/tests/regression-tests/.env.regression.example` to `.env.regression` and set `LOCAL_HOST_URL` if your API runs on a non-default address. `LOCAL_HOST_URL` takes priority over `BASE_URL`.
 
