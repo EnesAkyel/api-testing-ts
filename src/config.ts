@@ -10,4 +10,6 @@ export const config = {
   baseUrl: process.env['LOCAL_HOST_URL'] ?? getEnv('BASE_URL', 'http://localhost:8080/api/v1'),
   timeoutMs: Number.parseInt(getEnv('REQUEST_TIMEOUT_MS', '30000'), 10),
   responseTimeThresholdMs: Number.parseInt(getEnv('RESPONSE_TIME_THRESHOLD_MS', '3000'), 10),
+  authUsername: getEnv('AUTH_USERNAME', ''),
+  authPassword: getEnv('AUTH_PASSWORD', ''),
 } as const;

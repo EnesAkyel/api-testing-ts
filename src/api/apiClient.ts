@@ -9,6 +9,11 @@ export interface ApiResponse<T> {
 
 export class ApiClient {
   private readonly client: AxiosInstance;
+  private static defaultToken: string | null = null;
+
+  static setDefaultToken(token: string): void {
+    ApiClient.defaultToken = token;
+  }
 
   constructor(baseURL: string, config: AxiosRequestConfig = {}) {
     this.client = axios.create({
@@ -16,6 +21,13 @@ export class ApiClient {
       timeout: 30000,
       headers: { 'Content-Type': 'application/json' },
       ...config,
+    });
+
+    this.client.interceptors.request.use((reqConfig) => {
+      if (ApiClient.defaultToken) {
+        reqConfig.headers['Authorization'] = `Bearer ${ApiClient.defaultToken}`;
+      }
+      return reqConfig;
     });
   }
 

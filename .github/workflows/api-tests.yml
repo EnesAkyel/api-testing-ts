@@ -66,6 +66,10 @@ jobs:
 
       - name: Start movie-catalog-api
         uses: ./.github/actions/start-api
+        with:
+          auth-username: ${{ secrets.AUTH_USERNAME }}
+          auth-password: ${{ secrets.AUTH_PASSWORD }}
+          jwt-secret: ${{ secrets.JWT_SECRET }}
 
       - uses: actions/setup-node@v6
         with:
@@ -76,12 +80,21 @@ jobs:
 
       - name: Smoke tests
         run: npm run test:smoke
+        env:
+          AUTH_USERNAME: ${{ secrets.AUTH_USERNAME }}
+          AUTH_PASSWORD: ${{ secrets.AUTH_PASSWORD }}
 
       - name: Contract tests
         run: npm run test:contract
+        env:
+          AUTH_USERNAME: ${{ secrets.AUTH_USERNAME }}
+          AUTH_PASSWORD: ${{ secrets.AUTH_PASSWORD }}
 
       - name: Integration tests
         run: npm run test:integration
+        env:
+          AUTH_USERNAME: ${{ secrets.AUTH_USERNAME }}
+          AUTH_PASSWORD: ${{ secrets.AUTH_PASSWORD }}
 
       - name: Upload test reports
         if: always()
@@ -112,6 +125,10 @@ jobs:
 
       - name: Start movie-catalog-api
         uses: ./.github/actions/start-api
+        with:
+          auth-username: ${{ secrets.AUTH_USERNAME }}
+          auth-password: ${{ secrets.AUTH_PASSWORD }}
+          jwt-secret: ${{ secrets.JWT_SECRET }}
 
       - uses: actions/setup-node@v6
         with:
@@ -122,6 +139,9 @@ jobs:
 
       - name: Run regression tests
         run: npm run test:regression
+        env:
+          AUTH_USERNAME: ${{ secrets.AUTH_USERNAME }}
+          AUTH_PASSWORD: ${{ secrets.AUTH_PASSWORD }}
 
       - name: Upload regression report
         if: always()
