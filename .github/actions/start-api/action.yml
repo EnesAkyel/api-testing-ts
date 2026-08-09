@@ -1,6 +1,17 @@
 name: Start movie-catalog-api
 description: Checkout movie-catalog-api, build Docker image from pre-built JAR, start the API, and wait until it is healthy.
 
+inputs:
+  auth-username:
+    description: 'AUTH_USERNAME for the API'
+    required: true
+  auth-password:
+    description: 'AUTH_PASSWORD for the API'
+    required: true
+  jwt-secret:
+    description: 'JWT_SECRET for the API'
+    required: true
+
 runs:
   using: composite
   steps:
@@ -27,6 +38,10 @@ runs:
     - name: Start movie-catalog-api
       shell: bash
       working-directory: movie-catalog-api
+      env:
+        AUTH_USERNAME: ${{ inputs.auth-username }}
+        AUTH_PASSWORD: ${{ inputs.auth-password }}
+        JWT_SECRET: ${{ inputs.jwt-secret }}
       run: docker compose up -d
 
     - name: Wait for API to be ready
@@ -34,7 +49,7 @@ runs:
       run: |
         echo "Waiting for API..."
         for i in $(seq 1 30); do
-          if curl -sf http://localhost:8080/api/v1/movies > /dev/null; then
+          if curl -sf http://localhost:8080/v3/api-docs > /dev/null; then
             echo "API is ready after $((i * 5))s"
             exit 0
           fi
