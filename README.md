@@ -60,7 +60,7 @@ src/
 
 ## Prerequisites
 
-- Node.js 24+
+- Node.js 26+
 - npm 9+
 - Docker (to run [movie-catalog-api](https://github.com/EnesAkyel/movie-catalog-api) locally)
 
@@ -145,6 +145,18 @@ Extending `expect` keeps performance assertions readable and produces failure me
 
 ### Test Isolation
 All integration tests use `beforeAll` / `afterAll` to delete any pre-existing test data and clean up after themselves. Regression tests use dedicated MID ranges (5050–5053) that don't overlap with seeded data (1001–1030), preventing conflicts between runs.
+
+---
+
+## Checking for Dependency Upgrades
+
+```bash
+# List outdated npm packages (current vs. wanted vs. latest)
+npm outdated
+
+# Explain why a package is pinned to its current range (peer dependency chain)
+npm explain <package>
+```
 
 ---
 

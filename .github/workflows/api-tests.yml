@@ -7,7 +7,7 @@ on:
     types: [opened, synchronize, reopened]
 
 env:
-  NODE_VERSION: '24'
+  NODE_VERSION: '26'
   BASE_URL: http://localhost:8080/api/v1
 
 jobs:
